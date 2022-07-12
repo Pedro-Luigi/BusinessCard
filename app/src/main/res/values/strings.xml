@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Business Card</string>
+    <string name="tv_title_business_card">Business Card</string>
+    <string name="tv_company">Company:</string>
+    <string name="tv_new_card">New Card</string>
+    <string name="til_name">Name</string>
+</resources>
