@@ -7,27 +7,36 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.behavior.SwipeDismissBehavior
+import com.google.android.material.snackbar.Snackbar
 import com.meu.businesscard.data.BusinessCard
 import com.meu.businesscard.databinding.ItemCardBinding
-//import com.squareup.picasso.Picasso
 
 class BusinessCardAdapter : ListAdapter<BusinessCard, BusinessCardAdapter.ViewHolder>(DiffCallback()) {
 
     var listenerShare: (View) -> Unit = {}
+    var deleteListener: (BusinessCard) -> Unit = {}
 
     inner class ViewHolder(
         private val binding: ItemCardBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(item: BusinessCard) {
             binding.tvName.text = item.name
             binding.tvPhone.text = item.phone
             binding.tvEmail.text = item.email
+            binding.tvCompany.text = item.company
             binding.cvCard.setCardBackgroundColor(Color.parseColor(item.color))
-//            Picasso.get().load(item.image).into(binding.ivCompany)
-            binding.cvCard.setOnClickListener {
-                listenerShare(it)
+
+            binding.cvCard.setOnClickListener { card ->
+                listenerShare(card)
+            }
+
+            binding.ivDelete.setOnClickListener {
+                deleteListener(item)
             }
         }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

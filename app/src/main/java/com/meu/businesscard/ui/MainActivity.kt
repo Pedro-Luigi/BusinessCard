@@ -1,15 +1,15 @@
 package com.meu.businesscard.ui
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.app.ActivityCompat
 import com.meu.businesscard.App
+import com.meu.businesscard.data.BusinessCard
 import com.meu.businesscard.databinding.ActivityMainBinding
 import com.meu.businesscard.util.Image
-
-//TODO: 1 - Set an onLongClickListener to update an card
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,46 +26,42 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpPermissions()
         binding.rvCards.adapter = adapter
         getAllBusinessCard()
         insertListeners()
     }
 
+    private fun setUpPermissions() {
+        // write permission to access the storage
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+    }
+
     private fun insertListeners() {
-        // Add new card
+        // Open AddBusinessCard
         binding.btnAdd.setOnClickListener {
             val intent = Intent(this@MainActivity,AddBusinessCard::class.java)
             startActivity(intent)
         }
+        //share card
+        //TODO Não está abrindo a tela de compartilhar!
+        adapter.listenerShare = {
+            Image.share(this@MainActivity, card = it)
+        }
 
-        // Hide the FloatActionButton when scrolling to the bottom of the view
-        binding.rvCards.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && recyclerView.canScrollVertically(Integer.MAX_VALUE)) {
-                    binding.btnAdd.show()
-                } else {
-                    binding.btnAdd.hide()
-                }
-            }
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!recyclerView.canScrollVertically(Integer.MAX_VALUE)) {
-                    binding.btnAdd.hide()
-                }
-            }
-        })
-
-        // Share when clicking on the card
-        adapter.listenerShare = { card ->
-            Image.share(this@MainActivity, card)
+        adapter.deleteListener = {
+            deleteCard(it)
         }
     }
 
+    private fun deleteCard(businessCard: BusinessCard){
+        mainViewModel.delete(businessCard)
+    }
+
     private fun getAllBusinessCard() {
-        mainViewModel.getAll().observe(this) { businessCards ->
-            adapter.submitList(businessCards)
+        mainViewModel.getAll().observe(this) {
+            adapter.submitList(it)
         }
     }
 

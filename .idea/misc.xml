@@ -3,9 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/layout/activity_add_business_card.xml" value="0.20102564102564102" />
+        <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/drawable/ic_trash.xml" value="0.1245" />
+        <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/drawable/ic_viewcolor.xml" value="0.1" />
+        <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/layout/activity_add_business_card.xml" value="0.1" />
         <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/layout/item_card.xml" value="0.22" />
+        <entry key="..\:/Users/PC/Documents/DIO/Santander/BusinessCard/app/src/main/res/xml/provider_paths.xml" value="0.1" />
       </map>
     </option>
   </component>

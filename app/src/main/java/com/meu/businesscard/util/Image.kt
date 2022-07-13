@@ -12,15 +12,14 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.FileProvider.getUriForFile
 import com.meu.businesscard.R
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 
 class Image {
-
     companion object {
-
         fun share(context: Context, card: View) {
             val bitmap = getScreenShotFromView(card)
 
@@ -41,27 +40,25 @@ class Image {
                 val canvas = Canvas(screenShot)
                 card.draw(canvas)
             } catch (e: Exception) {
-                Log.e("Error", "Falha ao capturar imagem" + e.message)
+                Log.e("Error ->", "Falha ao capturar imagem" + e.message)
             }
             return screenShot
         }
 
         private fun saveMediaToStorage(context: Context, bitmap: Bitmap) {
-            val fileName = "${System.currentTimeMillis()}.jpg"
+            val filename = "${System.currentTimeMillis()}.jpg"
 
             var fos: OutputStream? = null
 
-            //If the android version is higher than Q
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 context.contentResolver?.also { resolver ->
                     val contentValues = ContentValues().apply {
-                        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                        put(MediaStore.MediaColumns.MIME_TYPE, "image.jpg")
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+                        put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
                         put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
                     }
-
-                    val imageUri: Uri? = resolver.insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                    val imageUri: Uri? =
+                        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
                     fos = imageUri?.let {
                         shareIntent(context, imageUri)
@@ -69,18 +66,20 @@ class Image {
                     }
                 }
             } else {
-                //If the android version is lower than Q
-                val imageDirectory = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                val image = File(imageDirectory, fileName)
-                shareIntent(context, Uri.fromFile(image))
+                // These for devices running on android < Q
+                val imagesDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                val image = File(imagesDir, filename)
+                val imageUri: Uri =
+                    getUriForFile(context,
+                          "com.meu.businesscard.fileprovider",
+                                   image)
+                shareIntent(context, imageUri)
                 fos = FileOutputStream(image)
             }
 
             fos?.use {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-                Toast.makeText(context,
-                    "Imagem capturada com sucesso",
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Imagem capturada com sucesso", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -93,8 +92,7 @@ class Image {
             context.startActivity(
                 Intent.createChooser(
                     intent,
-                    context.resources.getText(R.string.app_name)
-                    //TODO: TRACAR A STRING A CIMA
+                    context.resources.getText(R.string.share)
                 )
             )
         }

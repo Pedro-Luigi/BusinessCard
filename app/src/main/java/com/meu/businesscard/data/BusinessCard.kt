@@ -1,5 +1,6 @@
 package com.meu.businesscard.data
 
+import android.graphics.Color
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -9,6 +10,6 @@ data class BusinessCard(
     val name:String,
     val phone:String,
     val email:String,
-    val color:String,
-//    var image:String
+    val company:String,
+    val color: String
 )
