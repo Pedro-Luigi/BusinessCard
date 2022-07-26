@@ -64,5 +64,6 @@ class MainActivity : AppCompatActivity() {
             adapter.submitList(it)
         }
     }
-
+    //TODO: O APP ESTÁ FACHANDO SE O USUÁRIO CRIAR UM CARTÃO SEM SELECIONAR A COR.
+    //Se colocar uma cor "padrão" o problema acaba! 
 }
