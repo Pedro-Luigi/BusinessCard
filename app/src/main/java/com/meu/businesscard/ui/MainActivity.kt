@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this@MainActivity,AddBusinessCard::class.java)
             startActivity(intent)
         }
-        //share card
-        //TODO Não está abrindo a tela de compartilhar!
         adapter.listenerShare = {
             Image.share(this@MainActivity, card = it)
         }
@@ -65,5 +63,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
     //TODO: O APP ESTÁ FACHANDO SE O USUÁRIO CRIAR UM CARTÃO SEM SELECIONAR A COR.
-    //Se colocar uma cor "padrão" o problema acaba! 
+    //Se colocar uma cor "padrão" o problema acaba!
 }
